@@ -213,12 +213,21 @@ function _generate(mirror, obj, patches, path) {
       else {
         if (oldVal !== newVal) {
           changed = true;
-          patches.push({ op: "replace", path: path + "/" + escapePathComponent(key), value: _deepClone(newVal) });
+          patches.push({
+            op: "replace",
+            path: path + "/" + escapePathComponent(key),
+            value: _deepClone(newVal),
+            oldValue: oldVal,
+          });
         }
       }
     }
     else {
-      patches.push({ op: "remove", path: path + "/" + escapePathComponent(key) });
+      patches.push({
+        op: "remove",
+        path: path + "/" + escapePathComponent(key),
+        oldValue: oldVal,
+      });
       deleted = true; // property has been deleted
     }
   }

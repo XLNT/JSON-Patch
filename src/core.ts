@@ -20,7 +20,7 @@ interface HTMLElement {
   detachEvent: Function;
 }
 
-export type Operation = AddOperation<any> | RemoveOperation | ReplaceOperation<any> | MoveOperation | CopyOperation | TestOperation<any> | GetOperation<any>;
+export type Operation = AddOperation<any> | RemoveOperation<any> | ReplaceOperation<any> | MoveOperation | CopyOperation | TestOperation<any> | GetOperation<any>;
 
 export interface Validator<T> {
   (operation: Operation, index: number, document: T, existingPathFragment: string): void;
@@ -32,6 +32,10 @@ export interface OperationResult<T> {
   newDocument: T;
 }
 
+export interface InvertableOperation<T> {
+  oldValue?: T;
+}
+
 export interface BaseOperation {
   path: string;
 }
@@ -41,11 +45,11 @@ export interface AddOperation<T> extends BaseOperation {
   value: T;
 }
 
-export interface RemoveOperation extends BaseOperation {
+export interface RemoveOperation<T> extends BaseOperation, InvertableOperation<T> {
   op: 'remove';
 }
 
-export interface ReplaceOperation<T> extends BaseOperation {
+export interface ReplaceOperation<T> extends BaseOperation, InvertableOperation<T> {
   op: 'replace';
   value: T;
 }
@@ -144,7 +148,7 @@ const objOps = {
 var arrOps = {
   add: function (arr, i, document) {
     if(isInteger(i)) {
-      arr.splice(i, 0, this.value); 
+      arr.splice(i, 0, this.value);
     } else { // array props
       arr[i] = this.value;
     }
