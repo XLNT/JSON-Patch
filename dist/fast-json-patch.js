@@ -1,4 +1,4 @@
-/*! fast-json-patch, version: 2.0.6 */
+/*! fast-json-patch, version: 2.0.8 */
 var jsonpatch =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -906,12 +906,21 @@ function _generate(mirror, obj, patches, path) {
             else {
                 if (oldVal !== newVal) {
                     changed = true;
-                    patches.push({ op: "replace", path: path + "/" + helpers_1.escapePathComponent(key), value: helpers_1._deepClone(newVal) });
+                    patches.push({
+                        op: "replace",
+                        path: path + "/" + helpers_1.escapePathComponent(key),
+                        value: helpers_1._deepClone(newVal),
+                        oldValue: oldVal,
+                    });
                 }
             }
         }
         else {
-            patches.push({ op: "remove", path: path + "/" + helpers_1.escapePathComponent(key) });
+            patches.push({
+                op: "remove",
+                path: path + "/" + helpers_1.escapePathComponent(key),
+                oldValue: oldVal,
+            });
             deleted = true; // property has been deleted
         }
     }
